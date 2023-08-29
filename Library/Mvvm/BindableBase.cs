@@ -32,11 +32,7 @@ namespace Riesling.Library.Mvvm {
 			}
 		}
 
-		protected void RaisePropertiesChanged(params string[] propertyNames) {
-			RaisePropertiesChanged(propertyNames);
-		}
-
-		protected virtual void RaisePropertiesChanged(IEnumerable<string> propertyNames) {
+		protected virtual void RaisePropertiesChanged(params string[] propertyNames) {
 			foreach (var propertyName in propertyNames) {
 				RaisePropertyChanged(new PropertyChangedEventArgs(propertyName));
 			}
