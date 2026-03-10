@@ -27,36 +27,32 @@ public class ViewModelBase : BindableBase {
 }
 
 public abstract class ViewModelBase<TModelBase> : ViewModelBase
-	where TModelBase : BindableBase {
+	where TModelBase : BindableBase, new() {
 
 	#region Instances
 
-	protected TModelBase? _Model;
+	protected TModelBase _Model;
 
 	#endregion
 
 	#region Properties
 
-	public TModelBase? Model {
+	public TModelBase Model {
 		get => _Model;
 		set => SetProperty(ref _Model, value, Model_Changed);
 	}
 
-	protected virtual void Model_Changed(TModelBase? newModel, TModelBase? oldModel) {
-		if (oldModel != null) {
-			oldModel.PropertyChanged -= Model_PropertyChanged;
-		}
-		if (newModel != null) {
-			newModel.PropertyChanged += Model_PropertyChanged;
-		}
+	protected virtual void Model_Changed(TModelBase newModel, TModelBase oldModel) {
+		oldModel.PropertyChanged -= Model_PropertyChanged;
+		newModel.PropertyChanged += Model_PropertyChanged;
 	}
 
 	#endregion
 
 	#region Constructor
 
-	public ViewModelBase(TModelBase? model = null) {
-		Model = model;
+	public ViewModelBase(TModelBase model) {
+		_Model = model;
 	}
 
 	protected abstract void Model_PropertyChanged(object? sender, PropertyChangedEventArgs e);
