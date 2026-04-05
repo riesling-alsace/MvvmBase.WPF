@@ -5,11 +5,12 @@
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<RootNamespace>Riesling.Library.Mvvms</RootNamespace>
+		<RootNamespace>Riesling.Mvvms</RootNamespace>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\MvvmBase.Core\MvvmBase.Core.csproj" />
+		<ProjectReference Include="..\Mvvms.Core\Mvvms.Core.csproj" />
 	</ItemGroup>
 
 </Project>

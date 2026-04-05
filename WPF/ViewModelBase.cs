@@ -2,13 +2,13 @@
 using System.Windows;
 using System.Windows.Threading;
 
-namespace Riesling.Library.Mvvms.WPF;
+namespace Riesling.Mvvms.WPF;
 
 public class ViewModelBase : BindableBase {
 
 	private static Dispatcher UIDispatcher => Application.Current.Dispatcher;
 
-	#region Events
+	#region Raise Methods
 
 	protected override void RaisePropertiesChanged(params string[] propertyNames) {
 		if (UIDispatcher.CheckAccess()) {
@@ -29,29 +29,33 @@ public class ViewModelBase : BindableBase {
 public abstract class ViewModelBase<TModelBase> : ViewModelBase
 	where TModelBase : BindableBase, new() {
 
-	#region Instances
+	#region Fields
 
-	protected TModelBase _Model;
+	protected TModelBase? _Model;
 
 	#endregion
 
 	#region Properties
 
-	public TModelBase Model {
-		get => _Model;
+	public required TModelBase Model {
+		get => _Model!;
 		set => SetProperty(ref _Model, value, Model_Changed);
 	}
 
-	protected virtual void Model_Changed(TModelBase newModel, TModelBase oldModel) {
-		oldModel.PropertyChanged -= Model_PropertyChanged;
-		newModel.PropertyChanged += Model_PropertyChanged;
+	protected virtual void Model_Changed(TModelBase? newModel, TModelBase? oldModel) {
+		if (oldModel != null) {
+			oldModel.PropertyChanged -= Model_PropertyChanged;
+		}
+		if (newModel != null) {
+			newModel.PropertyChanged += Model_PropertyChanged;
+		}
 	}
 
 	#endregion
 
-	#region Constructor
+	#region Constructors
 
-	public ViewModelBase(TModelBase model) {
+    protected ViewModelBase(TModelBase model) {
 		_Model = model;
 	}
 
