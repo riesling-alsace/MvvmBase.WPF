@@ -6,15 +6,13 @@ namespace Riesling.Mvvms.WPF;
 
 public class ViewModelBase : BindableBase {
 
-	private static Dispatcher UIDispatcher => Application.Current.Dispatcher;
-
 	#region Raise Methods
 
 	protected override void RaisePropertiesChanged(params string[] propertyNames) {
-		if (UIDispatcher.CheckAccess()) {
+		if (Application.Current.Dispatcher.CheckAccess()) {
 			base.RaisePropertiesChanged(propertyNames);
 		} else {
-			UIDispatcher.BeginInvoke(() => {
+            Application.Current.Dispatcher.BeginInvoke(() => {
 				lock (this) {
 					base.RaisePropertiesChanged(propertyNames);
 				}
