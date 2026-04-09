@@ -1,14 +1,12 @@
-﻿using System.ComponentModel;
-using System.Windows;
-using System.Windows.Threading;
+﻿using System.Windows;
 
 namespace Riesling.Mvvms.WPF;
 
-public class ViewModelBase : BindableBase {
+public class ViewModelBase : PropertyBase {
 
 	#region Raise Methods
 
-	protected override void RaisePropertiesChanged(params string[] propertyNames) {
+	public override void RaisePropertiesChanged(params string[] propertyNames) {
 		if (Application.Current.Dispatcher.CheckAccess()) {
 			base.RaisePropertiesChanged(propertyNames);
 		} else {
@@ -25,40 +23,34 @@ public class ViewModelBase : BindableBase {
 }
 
 public abstract class ViewModelBase<TModelBase> : ViewModelBase
-	where TModelBase : BindableBase, new() {
+    where TModelBase : PropertyBase, new() {
 
-	#region Fields
+    #region Properties
 
-	protected TModelBase? _Model;
+    public TModelBase Model {
+        get;
+        private set;
+    }
 
-	#endregion
+    #endregion
 
-	#region Properties
-
-	public required TModelBase Model {
-		get => _Model!;
-		set => SetProperty(ref _Model, value, Model_Changed);
-	}
-
-	protected virtual void Model_Changed(TModelBase? newModel, TModelBase? oldModel) {
-		if (oldModel != null) {
-			oldModel.PropertyChanged -= Model_PropertyChanged;
-		}
-		if (newModel != null) {
-			newModel.PropertyChanged += Model_PropertyChanged;
-		}
-	}
-
-	#endregion
-
-	#region Constructors
+    #region Constructors
 
     protected ViewModelBase(TModelBase model) {
-		_Model = model;
-	}
+        Model = model;
+        Model.PropertiesChanged += Model_PropertiesChanged;
+    }
 
-	protected abstract void Model_PropertyChanged(object? sender, PropertyChangedEventArgs e);
+    ~ViewModelBase() {
+        Model.PropertiesChanged -= Model_PropertiesChanged;
+    }
 
-	#endregion
+    #endregion
+
+    #region Methods
+
+    protected abstract void Model_PropertiesChanged(object? sender, PropertiesChangedEventArgs e);
+
+    #endregion
 
 }
