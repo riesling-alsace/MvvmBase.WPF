@@ -27,7 +27,7 @@ public abstract class ViewModelBase<TModelBase> : ViewModelBase
 
     #region Properties
 
-    public required TModelBase Model {
+    public TModelBase Model {
         get;
         init {
             field = value;
@@ -38,6 +38,10 @@ public abstract class ViewModelBase<TModelBase> : ViewModelBase
     #endregion
 
     #region Constructors
+
+    protected ViewModelBase(TModelBase model) {
+        Model = model;
+    }
 
     ~ViewModelBase() {
         Model.PropertiesChanged -= Model_PropertiesChanged;
