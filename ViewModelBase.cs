@@ -6,13 +6,13 @@ public class ViewModelBase : ModelBase {
 
 	#region Raise Methods
 
-    protected override void RaisePropertiesChanged(params string[] propertyNames) {
+    protected override void RaisePropertyChanged(params string[] propertyNames) {
 		if (Application.Current.Dispatcher.CheckAccess()) {
-			base.RaisePropertiesChanged(propertyNames);
+			base.RaisePropertyChanged(propertyNames);
 		} else {
             Application.Current.Dispatcher.BeginInvoke(() => {
 				lock (this) {
-					base.RaisePropertiesChanged(propertyNames);
+					base.RaisePropertyChanged(propertyNames);
 				}
 			});
 		}
